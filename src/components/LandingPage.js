@@ -52,7 +52,7 @@ const LandingPage = ({ user, setUser }) => {
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Windsurf</h1>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">ElephantScale</h1>
               </div>
             </div>
             <div className="hidden md:block">
@@ -188,7 +188,7 @@ const LandingPage = ({ user, setUser }) => {
               Simple Process
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              How Windsurf
+              How ElephantScale
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Transforms Careers
               </span>
@@ -283,12 +283,12 @@ const LandingPage = ({ user, setUser }) => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-white">Windsurf</h3>
+              <h3 className="text-2xl font-bold text-white">ElephantScale</h3>
             </div>
             
             <div className="text-center md:text-right">
               <p className="text-gray-400 text-sm mb-2">
-                © 2025 Windsurf. All rights reserved.
+                © 2025 ElephantScale. All rights reserved.
               </p>
               <p className="text-gray-500 text-sm">
                 AI-Powered Career Intelligence Platform

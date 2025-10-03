@@ -16,7 +16,7 @@ const SimpleApp = () => {
           color: '#1a1a1a',
           marginBottom: '16px'
         }}>
-          Windsurf
+          ElephantScale
         </h1>
         <p style={{ 
           fontSize: '1.25rem', 

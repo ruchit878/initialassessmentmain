@@ -21,7 +21,7 @@ describe('LandingPage', () => {
 
   test('renders landing page with correct title', () => {
     renderWithRouter(<LandingPage user={null} setUser={jest.fn()} />);
-    expect(screen.getByText('Windsurf')).toBeInTheDocument();
+    expect(screen.getByText('ElephantScale')).toBeInTheDocument();
     expect(screen.getByText('Your AI-Powered')).toBeInTheDocument();
     expect(screen.getByText('Career Partner')).toBeInTheDocument();
   });
@@ -47,7 +47,7 @@ describe('LandingPage', () => {
 
   test('shows how it works section', () => {
     renderWithRouter(<LandingPage user={null} setUser={jest.fn()} />);
-    expect(screen.getByText('How Windsurf Works')).toBeInTheDocument();
+    expect(screen.getByText('How ElephantScale Works')).toBeInTheDocument();
     expect(screen.getByText('Upload Resume')).toBeInTheDocument();
     expect(screen.getByText('Choose Analysis')).toBeInTheDocument();
     expect(screen.getByText('Get Report')).toBeInTheDocument();
@@ -84,7 +84,7 @@ describe('LandingPage', () => {
 
   test('displays footer information', () => {
     renderWithRouter(<LandingPage user={null} setUser={jest.fn()} />);
-    expect(screen.getByText('© 2025 Windsurf. All rights reserved.')).toBeInTheDocument();
+    expect(screen.getByText('© 2025 ElephantScale. All rights reserved.')).toBeInTheDocument();
     expect(screen.getByText('AI-Powered Career Partner')).toBeInTheDocument();
   });
 });

@@ -74,7 +74,7 @@ export const useAppStore = create<AppState>()(
       reset: () => set({ user: null, resumeData: null, analysisType: null, psychometricResults: null }),
     }),
     {
-      name: "windsurf-storage",
+      name: "ElephantScale-storage",
     },
   ),
 )

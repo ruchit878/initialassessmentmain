@@ -33,9 +33,9 @@ describe('Dashboard', () => {
     expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
 
-  test('displays Windsurf branding', () => {
+  test('displays ElephantScale branding', () => {
     renderWithRouter(<Dashboard user={mockUser} />);
-    expect(screen.getByText('Windsurf')).toBeInTheDocument();
+    expect(screen.getByText('ElephantScale')).toBeInTheDocument();
   });
 
   test('shows start analysis section', () => {

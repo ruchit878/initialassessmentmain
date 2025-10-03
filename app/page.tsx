@@ -64,12 +64,13 @@ export default function LandingPage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="flex-shrink-0 flex items-center">
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                  <Sparkles className="w-5 h-5 text-white" />
+                <div className="mr-3">
+                  <img
+                    src={'/elephant-logo.png'}
+                    alt="ElephantScale logo"
+                    className="w-30 h-10 object-contain"
+                  />
                 </div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                  Windsurf
-                </h1>
               </div>
             </div>
             <div className="hidden md:block">
@@ -212,7 +213,7 @@ export default function LandingPage() {
               Simple Process
             </div>
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              How Windsurf
+              How ElephantScale
               <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Transforms Careers
               </span>
@@ -306,14 +307,17 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-8 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center mr-3">
-                <Sparkles className="w-5 h-5 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-white">Windsurf</h3>
+              <div className="mr-3">
+                  <img
+                    src={'/elephant-logo.png'}
+                    alt="ElephantScale logo"
+                    className="w-30 h-10 object-contain"
+                  />
+                </div>
             </div>
 
             <div className="text-center md:text-right">
-              <p className="text-gray-400 text-sm mb-2">© 2025 Windsurf. All rights reserved.</p>
+              <p className="text-gray-400 text-sm mb-2">© 2025 ElephantScale. All rights reserved.</p>
               <p className="text-gray-500 text-sm">AI-Powered Career Intelligence Platform</p>
             </div>
           </div>
