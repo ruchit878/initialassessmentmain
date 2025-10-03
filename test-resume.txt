@@ -1,0 +1,36 @@
+John Smith
+AI/ML Engineer
+20 years of experience
+
+EXPERIENCE
+Senior AI/ML Engineer | TechCorp | 2020 - Present
+- Leading machine learning initiatives for enterprise applications
+- Developing deep learning models for computer vision and NLP
+- Managing a team of 5 data scientists and ML engineers
+
+Principal Data Scientist | DataCorp | 2015 - 2020
+- Built recommendation systems serving 10M+ users
+- Implemented MLOps pipelines using Kubernetes and Docker
+- Led research on reinforcement learning algorithms
+
+Senior Software Engineer | StartupXYZ | 2010 - 2015
+- Developed scalable web applications using Python and JavaScript
+- Implemented microservices architecture on AWS
+- Mentored junior developers
+
+Software Engineer | BigTech | 2004 - 2010
+- Built distributed systems handling millions of requests
+- Worked on search algorithms and data processing pipelines
+- Contributed to open source machine learning libraries
+
+EDUCATION
+PhD in Computer Science | Stanford University | 2004
+MS in Computer Science | MIT | 2002
+BS in Computer Science | UC Berkeley | 2000
+
+SKILLS
+- Machine Learning: TensorFlow, PyTorch, Scikit-learn, Keras
+- Programming: Python, R, Java, C++, JavaScript
+- Cloud: AWS, GCP, Azure, Kubernetes, Docker
+- Data: Spark, Hadoop, SQL, NoSQL, ETL pipelines
+- AI/ML: Deep Learning, NLP, Computer Vision, Reinforcement Learning
