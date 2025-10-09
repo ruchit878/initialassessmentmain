@@ -3,16 +3,15 @@
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { Upload, User, LogOut, Sparkles, Brain, TrendingUp, Zap, ArrowRight, FileText, Settings } from "lucide-react"
-import { useAppStore } from "@/lib/store"
+import { useAuth } from '@/components/AuthProvider'
 
 export default function Dashboard() {
   const router = useRouter()
-  const user = useAppStore((state) => state.user)
-  const setUser = useAppStore((state) => state.setUser)
+  const { user, logout } = useAuth()
 
   useEffect(() => {
     if (!user) {
-      router.push("/")
+      router.replace("/")
     }
   }, [user, router])
 
@@ -25,8 +24,7 @@ export default function Dashboard() {
   }
 
   const handleSignOut = () => {
-    setUser(null)
-    router.push("/")
+    logout()
   }
 
   if (!user) {

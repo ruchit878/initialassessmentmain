@@ -5,21 +5,50 @@ import { useRouter } from "next/navigation"
 import { useDropzone } from "react-dropzone"
 import { Upload, FileText, CheckCircle, XCircle, ArrowLeft, Sparkles, Brain, Zap, User, LogOut } from "lucide-react"
 import { useAppStore } from "@/lib/store"
-import { parseResumeFile } from "@/lib/resume-parser"
+// import { parseResumeFile } from "@/lib/resume-parser" // no longer used; using external API
+import { useAuth } from '@/components/AuthProvider'
+import type { ResumeData } from '@/lib/store'
+
+const API_URL = process.env.NEXT_PUBLIC_RESUME_API || 'http://127.0.0.1:8000/resume_assessment/resume-parser'
+
+async function parseResumeViaApi(file: File): Promise<ResumeData> {
+  const form = new FormData()
+  form.append('resume', file, file.name)
+  const res = await fetch(API_URL, { method: 'POST', body: form })
+  if (!res.ok) {
+    const text = await res.text().catch(() => '')
+    throw new Error(`Parser API ${res.status}: ${text}`)
+  }
+  const data = await res.json()
+  const item = Array.isArray(data) ? (data[0] || {}) : data
+  const mapped: ResumeData = {
+    fileName: item.fileName ?? file.name,
+    fileSize: item.fileSize ?? file.size,
+    uploadDate: item.uploadDate ?? new Date().toISOString(),
+    skills: item.skills ?? [],
+    experience: item.experience ?? 'Unable to determine',
+    industry: item.industry ?? 'Technology',
+    education: item.education ?? 'Unable to determine',
+    currentRole: item.currentRole ?? 'Unable to determine',
+    rawText: item.rawText,
+    meta: item.meta,
+  }
+  return mapped
+}
 
 export default function ResumeUpload() {
   const router = useRouter()
-  const user = useAppStore((state) => state.user)
+  const { user, logout } = useAuth()
   const resumeData = useAppStore((state) => state.resumeData)
   const setResumeData = useAppStore((state) => state.setResumeData)
-  const setUser = useAppStore((state) => state.setUser)
 
   const [uploadStatus, setUploadStatus] = useState<"idle" | "uploading" | "success" | "error">("idle")
   const [uploadedFile, setUploadedFile] = useState<File | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user) {
-      router.push("/")
+      router.replace("/")
     }
   }, [user, router])
 
@@ -29,13 +58,14 @@ export default function ResumeUpload() {
       if (file) {
         setUploadStatus("uploading")
         setUploadedFile(file)
-
+        setErrorMessage(null)
         try {
-          const parsedData = await parseResumeFile(file)
+          const parsedData = await parseResumeViaApi(file)
           setResumeData(parsedData)
           setUploadStatus("success")
-        } catch (error) {
-          console.error("Error parsing resume:", error)
+        } catch (error: any) {
+          console.error("Error parsing resume via API:", error)
+          setErrorMessage(error?.message || 'Failed to parse resume')
           setUploadStatus("error")
         }
       }
@@ -52,7 +82,7 @@ export default function ResumeUpload() {
       "text/plain": [".txt"],
     },
     maxFiles: 1,
-    maxSize: 10 * 1024 * 1024,
+    maxSize: 15 * 1024 * 1024,
   })
 
   const handleContinue = () => {
@@ -64,8 +94,7 @@ export default function ResumeUpload() {
   }
 
   const handleSignOut = () => {
-    setUser(null)
-    router.push("/")
+    logout()
   }
 
   if (!user) {
@@ -101,7 +130,7 @@ export default function ResumeUpload() {
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                <span className="text-sm font-medium text-gray-700">{user!.name}</span>
               </div>
               <button
                 onClick={handleSignOut}
@@ -218,10 +247,10 @@ export default function ResumeUpload() {
                     <FileText className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900 text-lg">{resumeData.fileName}</h4>
-                    {resumeData.meta && (
+                    <h4 className="font-bold text-gray-900 text-lg">{resumeData!.fileName}</h4>
+                    {resumeData!.meta && (
                       <p className="text-sm text-gray-600">
-                        Parsed with {resumeData.meta.extractor} • {resumeData.meta.textLength} characters
+                        Parsed with {resumeData!.meta?.extractor} • {resumeData!.meta?.textLength} characters
                       </p>
                     )}
                   </div>
@@ -235,7 +264,7 @@ export default function ResumeUpload() {
                       </div>
                       <span className="font-semibold text-gray-700">Industry</span>
                     </div>
-                    <span className="text-gray-900 font-medium">{resumeData.industry}</span>
+                    <span className="text-gray-900 font-medium">{resumeData!.industry}</span>
                   </div>
 
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
@@ -245,7 +274,7 @@ export default function ResumeUpload() {
                       </div>
                       <span className="font-semibold text-gray-700">Experience</span>
                     </div>
-                    <span className="text-gray-900 font-medium">{resumeData.experience}</span>
+                    <span className="text-gray-900 font-medium">{resumeData!.experience}</span>
                   </div>
 
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
@@ -255,7 +284,7 @@ export default function ResumeUpload() {
                       </div>
                       <span className="font-semibold text-gray-700">Current Role</span>
                     </div>
-                    <span className="text-gray-900 font-medium">{resumeData.currentRole}</span>
+                    <span className="text-gray-900 font-medium">{resumeData!.currentRole}</span>
                   </div>
 
                   <div className="bg-white rounded-xl p-4 border border-gray-200">
@@ -265,7 +294,7 @@ export default function ResumeUpload() {
                       </div>
                       <span className="font-semibold text-gray-700">Education</span>
                     </div>
-                    <span className="text-gray-900 font-medium">{resumeData.education}</span>
+                    <span className="text-gray-900 font-medium">{resumeData!.education}</span>
                   </div>
                 </div>
 
@@ -277,7 +306,7 @@ export default function ResumeUpload() {
                     Key Skills
                   </h5>
                   <div className="flex flex-wrap gap-2">
-                    {resumeData.skills.slice(0, 12).map((skill, index) => (
+                    {resumeData!.skills.slice(0, 12).map((skill, index) => (
                       <span
                         key={index}
                         className="px-4 py-2 bg-gradient-to-r from-blue-100 to-purple-100 text-blue-800 rounded-full text-sm font-medium border border-blue-200"
@@ -285,9 +314,9 @@ export default function ResumeUpload() {
                         {skill}
                       </span>
                     ))}
-                    {resumeData.skills.length > 12 && (
+                    {resumeData!.skills.length > 12 && (
                       <span className="px-4 py-2 bg-gray-100 text-gray-600 rounded-full text-sm">
-                        +{resumeData.skills.length - 12} more
+                        +{resumeData!.skills.length - 12} more
                       </span>
                     )}
                   </div>
@@ -310,16 +339,14 @@ export default function ResumeUpload() {
                 <XCircle className="w-10 h-10 text-white" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Upload failed</h3>
-              <p className="text-lg text-gray-600 mb-8">
-                There was an error processing your resume. This might be due to file format or size issues.
+              <p className="text-lg text-gray-600 mb-4">
+                {errorMessage || 'There was an error processing your resume.'}
               </p>
-
               <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8 max-w-md mx-auto">
                 <p className="text-sm text-red-700">
-                  <strong>Tip:</strong> Try converting your file to PDF or ensure it's under 10MB
+                  <strong>Tip:</strong> Ensure CORS is allowed on {API_URL}. Try converting your file to PDF or ensure it's under 15MB.
                 </p>
               </div>
-
               <button
                 onClick={() => setUploadStatus("idle")}
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"

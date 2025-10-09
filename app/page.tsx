@@ -1,36 +1,34 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { useEffect } from 'react'
+import { useAuth } from '@/components/AuthProvider'
 import {
   Linkedin,
   Brain,
   TrendingUp,
   Shield,
   Users,
-  ArrowRight,
   Sparkles,
   Zap,
   Target,
   CheckCircle,
+  ArrowRight,
+  Briefcase,
 } from "lucide-react"
-import { useAppStore } from "@/lib/store"
+import LinkedInLoginButton from '@/components/LinkedInButton'
+import GoogleButton from '@/components/GoogleButton'
+import { Card, CardContent } from "@/components/ui/card"
 
 export default function LandingPage() {
   const router = useRouter()
-  const setUser = useAppStore((state) => state.setUser)
+  const { user, isLoading } = useAuth()
 
-  const handleLinkedInLogin = () => {
-    // Simulate LinkedIn authentication
-    const mockUser = {
-      id: "1",
-      name: "John Doe",
-      email: "john.doe@example.com",
-      profilePicture: "https://via.placeholder.com/150",
-      linkedinId: "johndoe123",
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace('/dashboard')
     }
-    setUser(mockUser)
-    router.push("/dashboard")
-  }
+  }, [isLoading, user, router])
 
   const features = [
     {
@@ -129,24 +127,28 @@ export default function LandingPage() {
               data-driven recommendations tailored just for you.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button
-                onClick={handleLinkedInLogin}
-                className="group relative px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center"
-              >
-                <Linkedin className="w-5 h-5 mr-3" />
-                Continue with LinkedIn
-                <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-1 transition-transform duration-300" />
-              </button>
+        <div className="flex justify-center">
+          <Card className="max-w-md w-full bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-white/20 shadow-2xl">
+            <CardContent className="p-8 space-y-6 text-center">
+              <div className="space-y-2">
+                
+                <h2 className="text-2xl font-bold">Get Started</h2>
+                <p className="text-muted-foreground">
+                  Sign in to unlock your career potential
+                </p>
+              </div>
 
-              <a
-                href="#features"
-                className="px-8 py-4 bg-white/80 backdrop-blur-sm text-gray-700 font-semibold rounded-2xl border border-gray-200 hover:bg-white hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300 flex items-center"
-              >
-                Explore Features
-                <Target className="w-5 h-5 ml-3" />
-              </a>
-            </div>
+              <div className="space-y-4">
+                <LinkedInLoginButton />
+                <GoogleButton />
+                <p className="text-xs text-muted-foreground">
+                  🔒 Secure OAuth 2.0 authentication with LinkedIn & Google
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
 
             <div className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-gray-500">
               <div className="flex items-center">
@@ -283,7 +285,7 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
-              onClick={handleLinkedInLogin}
+              //onClick={handleLinkedInLogin}
               className="group px-8 py-4 bg-white text-blue-600 font-bold rounded-2xl shadow-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center"
             >
               <Linkedin className="w-6 h-6 mr-3" />

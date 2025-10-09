@@ -4,19 +4,19 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import { FileText, TrendingUp, ArrowRight, Clock, Target, ArrowLeft, User, LogOut, Sparkles, Brain } from "lucide-react"
 import { useAppStore } from "@/lib/store"
+import { useAuth } from '@/components/AuthProvider'
 
 export default function AnalysisSelection() {
   const router = useRouter()
-  const user = useAppStore((state) => state.user)
+  const { user, logout } = useAuth()
   const resumeData = useAppStore((state) => state.resumeData)
   const setAnalysisType = useAppStore((state) => state.setAnalysisType)
-  const setUser = useAppStore((state) => state.setUser)
 
   useEffect(() => {
     if (!user) {
-      router.push("/")
+      router.replace("/")
     } else if (!resumeData) {
-      router.push("/upload")
+      router.replace("/upload")
     }
   }, [user, resumeData, router])
 
@@ -35,8 +35,7 @@ export default function AnalysisSelection() {
   }
 
   const handleSignOut = () => {
-    setUser(null)
-    router.push("/")
+    logout()
   }
 
   if (!user || !resumeData) {
@@ -72,7 +71,7 @@ export default function AnalysisSelection() {
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-sm font-medium text-gray-700">{user.name}</span>
+                <span className="text-sm font-medium text-gray-700">{user!.name}</span>
               </div>
               <button
                 onClick={handleSignOut}

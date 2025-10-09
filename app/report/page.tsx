@@ -20,48 +20,50 @@ import {
   User,
   LogOut,
   Sparkles,
+  XCircle,
 } from "lucide-react"
 import { useAppStore } from "@/lib/store"
 import { PremiumReportService } from "@/lib/premium-report-service"
+import { useAuth } from '@/components/AuthProvider'
 
 export default function ReportGeneration() {
   const router = useRouter()
-  const user = useAppStore((state) => state.user)
+  const { user, logout } = useAuth()
   const resumeData = useAppStore((state) => state.resumeData)
   const analysisType = useAppStore((state) => state.analysisType)
   const psychometricResults = useAppStore((state) => state.psychometricResults)
-  const setUser = useAppStore((state) => state.setUser)
 
   const [isGenerating, setIsGenerating] = useState(true)
   const [reportData, setReportData] = useState<any>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user) {
-      router.push("/")
+      router.replace("/")
       return
     }
     if (!resumeData) {
-      router.push("/upload")
+      router.replace("/upload")
       return
     }
 
     const generateReport = async () => {
       try {
-        const report = await PremiumReportService.generatePremiumReport(resumeData, psychometricResults, analysisType)
+        const report = await PremiumReportService.generatePremiumReport(resumeData, psychometricResults, analysisType ?? 'quick')
         setReportData(report)
         setIsGenerating(false)
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error generating report:", error)
+        setError(error?.message || 'Failed to generate report')
         setIsGenerating(false)
       }
     }
 
-    setTimeout(generateReport, 3000)
+    setTimeout(generateReport, 1200)
   }, [resumeData, analysisType, psychometricResults, user, router])
 
   const handleSignOut = () => {
-    setUser(null)
-    router.push("/")
+    logout()
   }
 
   const handleBack = () => {
@@ -134,8 +136,22 @@ export default function ReportGeneration() {
     )
   }
 
-  if (!reportData) {
-    return null
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 flex items-center justify-center">
+        <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-md mx-auto text-center">
+          <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <XCircle className="w-10 h-10 text-white" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Could not generate report</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={() => router.refresh()} className="px-5 py-2 rounded-xl bg-blue-600 text-white font-semibold">Try Again</button>
+            <button onClick={() => router.push('/analysis')} className="px-5 py-2 rounded-xl bg-gray-100 text-gray-700 font-semibold">Back to Analysis</button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
